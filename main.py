@@ -88,6 +88,18 @@ class PortScanner:
         }
         return services.get(port, "Unknown")
 
+def grab_banner(self, port):
+    """Extract service banner from open port."""
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(2)
+        sock.connect((self.target, port))
+        sock.send(b'GET / HTTP/1.0\r\n\r\n')
+        banner = sock.recv(1024).decode('utf-8', errors='ignore')
+        sock.close()
+        return banner.strip()
+    except:
+        return None
 
 def banner():
     """Display program banner."""
