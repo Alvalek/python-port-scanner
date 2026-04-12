@@ -12,7 +12,9 @@ import threading
 from datetime import datetime
 import argparse
 import sys
-from tqdm import tqdm 
+import json
+import csv
+from tqdm import tqdm
 
 class STower:
     """
