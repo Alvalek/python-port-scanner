@@ -26,7 +26,7 @@ class STower:
         self.results = []
         self.threads = []
         
-        def scan_port(self, port):
+    def scan_port(self, port):
         """Scan a single port with enhanced logging."""
         GREEN = '\033[92m'
         RED = '\033[91m'
@@ -108,7 +108,7 @@ class STower:
 
         self._print_summary()
 
-        def _print_summary(self):
+    def _print_summary(self):
         GREEN = '\033[92m'
         RED = '\033[91m'
         YELLOW = '\033[93m'
