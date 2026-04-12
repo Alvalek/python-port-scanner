@@ -1,3 +1,1 @@
-# No external dependencies needed - uses Python standard library
-# This keeps the project portable and easy to deploy
-# tqdm
+tqdm>=4.65.0
