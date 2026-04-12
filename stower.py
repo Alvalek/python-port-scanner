@@ -49,7 +49,8 @@ class STower:
                     sock.send(b'GET / HTTP/1.0\r\n\r\n')
                     banner_data = sock.recv(1024).decode('utf-8', errors='ignore').strip()
                     if banner_data:
-                        banner = banner_data.split('\r\n')[0]
+                        banner_lines = banner_data.split('\r\n')[:3]
+                        banner = '\r\n'.join(banner_lines)
                         if "Apache" in banner: service_name = "Apache"
                         elif "nginx" in banner: service_name = "nginx"
                         elif "Microsoft-IIS" in banner: service_name = "IIS"
