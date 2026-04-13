@@ -197,8 +197,8 @@ class STower:
                 if version_info["vuln_status"] == "VULNERABLE":
                     print(f"    [-] ALERT: {version_info['details']}")
                 
-            else:
-                pass
+                else:
+                    pass
                 
             sock.close()
             
