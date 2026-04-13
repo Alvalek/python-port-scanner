@@ -107,3 +107,10 @@ stower/
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
+
+##  Smart Host Discovery (`--discover`)
+STower uses a **hybrid discovery method**:
+```bash
+python stower.py -t 192.168.1.1 --discover
+```
+Uses ICMP ping first, then falls back to TCP handshake on ports 80, 443, and 22. Prevents wasted time on dead hosts.
