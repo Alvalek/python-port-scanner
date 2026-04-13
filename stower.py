@@ -32,30 +32,38 @@ class STower:
 
     def is_host_alive(self, timeout=2):
         """
-        Check if a host is alive using ICMP ping.
-        
-        Args:
-            timeout (int): Seconds to wait for a reply.
-            
-        Returns:
-            bool: True if host is alive, False otherwise.
+        Smart Host Discovery: Tries ICMP first, then TCP fallback.
         """
-        # Detect OS to set correct ping flags
+        # 1. Try ICMP Ping (Fast, but often blocked)
         param = '-n' if platform.system().lower() == 'windows' else '-c'
         command = ['ping', param, '1', '-W', str(timeout), self.target]
         
         try:
-            # Run ping command silently
-            # stdout=subprocess.DEVNULL hides the output
-            # stderr=subprocess.DEVNULL hides errors
-            output = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            
-            # Return code 0 means success (host alive)
-            return output.returncode == 0
-            
-        except Exception as e:
-            print(f"⚠  Error during ping: {e}")
-            return False
+            if subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
+                return True
+        except:
+            pass
+
+        # 2. Fallback: TCP Connect to common ports 
+        # We try port 80 (HTTP) and 443 (HTTPS)
+        common_ports = [80, 443, 22] 
+        
+        for port in common_ports:
+            try:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(1)
+                result = sock.connect_ex((self.target, port))
+                sock.close()
+                
+                # If we got a connection (0) or even a reset (connection refused), the host is UP
+                # A "Connection Refused" (RST) means the host is alive but the port is closed.
+                # A "Timeout" means the host might be filtering or dead.
+                if result == 0 or result == 111: # 111 is ECONNREFUSED on Linux
+                    return True
+            except:
+                continue
+        
+        return False
         
     def scan_port(self, port):
         """Scan a single port with enhanced logging."""
@@ -115,11 +123,17 @@ class STower:
     def scan(self, num_threads=50, discover_first=True):
         """Scan with progress bar and threading."""
         if discover_first:
-            print(f"\n🔍︎ Checking host availability: {self.target}...")
+            print(f"\n🔍︎ Performing Smart Host Discovery on {self.target}...")
+            print(f"   [1/2] Checking ICMP (Ping)...")
+            
             if not self.is_host_alive():
-                print(f"⛒ Host {self.target} is DOWN or blocking ICMP.")
-                print("Tip: Try scanning without --discover if the host blocks pings.")
+                print(f"   [2/2] Checking TCP Ports (Fallback)...")
+                # The function already tried TCP, so if it returns False, it's likely dead
+                print(f"✖ Host {self.target} appears DOWN or heavily filtered.")
+                print("Note: Some firewalls block ICMP and common ports. Try scanning without --discover.")
                 return # Stop execution early
+                
+            print(f"✓ Host is ALIVE. Proceeding to port scan...")
                 
         print(f"\n🛰 Target: {self.target}")
         print(f"🗓 Range: {self.start_port} - {self.end_port}")
@@ -273,10 +287,10 @@ def main():
         else:
             start = end = int(args.ports)
     except ValueError:
-        print("⛒ Invalid port range."); sys.exit(1)
+        print("✖ Invalid port range."); sys.exit(1)
         
     if start < 1 or end > 65535:
-        print("⛒ Ports must be 1-65535"); sys.exit(1)
+        print("✖ Ports must be 1-65535"); sys.exit(1)
         
     scanner = STower(args.target, start, end)
     scanner.scan(num_threads=args.threads, discover_first=args.discover)
