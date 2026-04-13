@@ -15,6 +15,8 @@ import sys
 import json
 import csv
 from tqdm import tqdm
+import subprocess
+import platform
 
 class STower:
     """
@@ -27,6 +29,33 @@ class STower:
         self.open_ports = []
         self.results = []
         self.threads = []
+
+    def is_host_alive(self, timeout=2):
+        """
+        Check if a host is alive using ICMP ping.
+        
+        Args:
+            timeout (int): Seconds to wait for a reply.
+            
+        Returns:
+            bool: True if host is alive, False otherwise.
+        """
+        # Detect OS to set correct ping flags
+        param = '-n' if platform.system().lower() == 'windows' else '-c'
+        command = ['ping', param, '1', '-W', str(timeout), self.target]
+        
+        try:
+            # Run ping command silently
+            # stdout=subprocess.DEVNULL hides the output
+            # stderr=subprocess.DEVNULL hides errors
+            output = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            
+            # Return code 0 means success (host alive)
+            return output.returncode == 0
+            
+        except Exception as e:
+            print(f"⚠  Error during ping: {e}")
+            return False
         
     def scan_port(self, port):
         """Scan a single port with enhanced logging."""
@@ -83,11 +112,18 @@ class STower:
         except Exception:
             pass
     
-    def scan(self, num_threads=50):
+    def scan(self, num_threads=50, discover_first=True):
         """Scan with progress bar and threading."""
-        print(f"\n Target: {self.target}")
-        print(f"Range: {self.start_port} - {self.end_port}")
-        print(f"Threads: {num_threads}\n")
+        if discover_first:
+            print(f"\n🔍︎ Checking host availability: {self.target}...")
+            if not self.is_host_alive():
+                print(f"⛒ Host {self.target} is DOWN or blocking ICMP.")
+                print("Tip: Try scanning without --discover if the host blocks pings.")
+                return # Stop execution early
+                
+        print(f"\n🛰 Target: {self.target}")
+        print(f"🗓 Range: {self.start_port} - {self.end_port}")
+        print(f"ϟ Threads: {num_threads}\n")
         
         total_ports = self.end_port - self.start_port + 1
         
