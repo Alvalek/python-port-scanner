@@ -262,6 +262,8 @@ def main():
     parser.add_argument("-T", "--threads", type=int, default=50, help="Thread count")
     parser.add_argument("-o", "--output", help="Output file (e.g., results.json)")
     parser.add_argument("-f", "--format", choices=["json", "csv"], default="json", help="Output format")
+    parser.add_argument("--discover", action="store_true", 
+                       help="Check if host is alive (ping) before scanning ports")
     
     args = parser.parse_args()
     
@@ -277,7 +279,7 @@ def main():
         print("❌ Ports must be 1-65535"); sys.exit(1)
         
     scanner = STower(args.target, start, end)
-    scanner.scan(num_threads=args.threads)
+    scanner.scan(num_threads=args.threads, discover_first=args.discover)
     
     if args.output:
         scanner.export_results(args.output, args.format)
