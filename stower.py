@@ -208,6 +208,14 @@ class STower:
     
     def scan(self, num_threads=50, discover_first=True, stealth=False, delay=0.0):
         """Scan with progress bar and threading."""
+        STD_GREEN = '\033[32m'           
+        BRIGHT_GREEN = '\033[92m\033[1m'
+        RED = '\033[91m\033[1m'         
+        WHITE = '\033[97m'               
+        CYAN = '\033[96m'                
+        RESET = '\033[0m'                
+        BOLD = '\033[1m'     
+        
         if discover_first:
             print(f"\n🔍︎ Performing Smart Host Discovery on {self.target}...")
             print(f"   [1/2] Checking ICMP (Ping)...")
@@ -231,7 +239,7 @@ class STower:
             
         total_ports = self.end_port - self.start_port + 1
         
-        with tqdm(total=total_ports, desc="Scanning", unit="port", colour="white") as pbar:
+        with tqdm(total=total_ports, desc="Scanning", unit="port", colour="STD_GREEN") as pbar:
             for port in range(self.start_port, self.end_port + 1):
                 t = threading.Thread(target=self.scan_port, args=(port, effective_delay))
                 self.threads.append(t)
