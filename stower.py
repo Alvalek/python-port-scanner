@@ -126,12 +126,13 @@ class STower:
         
     def scan_port(self, port, delay=0.0):
         """Scan a single port with enhanced logging and version detection."""
-        DIM_GREEN = '\033[90m\033[2m'      # Dim, faint green for system logs
-        BRIGHT_GREEN = '\033[92m\033[1m'   # Bright, bold green for success/open
-        RED = '\033[91m\033[1m'            # Bright red for errors/vulns
-        WHITE = '\033[97m'                 # White for headers
-        CYAN = '\033[96m'                  # Cyan for accents (optional)
-        RESET = '\033[0m'                  # Reset to default
+        STD_GREEN = '\033[32m'           # Standard green (readable on black)
+        BRIGHT_GREEN = '\033[92m\033[1m' # Bright + Bold (Success/Highlights)
+        RED = '\033[91m\033[1m'          # Bright + Bold (Errors/Vulns)
+        WHITE = '\033[97m'               # White (Headers)
+        CYAN = '\033[96m'                # Cyan (Accents)
+        RESET = '\033[0m'                # Reset
+        BOLD = '\033[1m'                 # Bold modifier
         
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -253,22 +254,22 @@ class STower:
 
     def _print_summary(self):
         # DEFINE COLORS HERE (each method needs its own color definitions)
-        DIM_GREEN = '\033[90m\033[2m'
-        BRIGHT_GREEN = '\033[92m\033[1m'
-        RED = '\033[91m\033[1m'
-        WHITE = '\033[97m'
-        CYAN = '\033[96m'
-        RESET = '\033[0m'
-        BOLD = '\033[1m'
+        STD_GREEN = '\033[32m'           # Standard green (readable on black)
+        BRIGHT_GREEN = '\033[92m\033[1m' # Bright + Bold (Success/Highlights)
+        RED = '\033[91m\033[1m'          # Bright + Bold (Errors/Vulns)
+        WHITE = '\033[97m'               # White (Headers)
+        CYAN = '\033[96m'                # Cyan (Accents)
+        RESET = '\033[0m'                # Reset
+        BOLD = '\033[1m'                 # Bold modifier
 
         print(f"\n{WHITE}============================================================{RESET}")
         print(f"{WHITE}{BOLD}SCAN REPORT SUMMARY{RESET}")
         print(f"{WHITE}============================================================{RESET}")
         
-        # Use DIM_GREEN for labels to make them subtle
-        print(f"{DIM_GREEN}Target:      {self.target}{RESET}")
-        print(f"{DIM_GREEN}Ports Scanned: {self.end_port - self.start_port + 1}{RESET}")
-        print(f"{DIM_GREEN}Open Ports:  {BRIGHT_GREEN}{len(self.open_ports)}{RESET}")
+        # Use STD_GREEN for labels to make them subtle
+        print(f"{STD_GREEN}Target:      {self.target}{RESET}")
+        print(f"{STD_GREEN}Ports Scanned: {self.end_port - self.start_port + 1}{RESET}")
+        print(f"{STD_GREEN}Open Ports:  {BRIGHT_GREEN}{len(self.open_ports)}{RESET}")
         
         vulns = [r for r in self.results if r["vuln_status"] == "VULNERABLE"]
         if vulns:
@@ -339,7 +340,7 @@ def grab_banner(self, port):
 
 def banner():
     """Display the STower Retro Terminal Dashboard."""
-    DIM_GREEN = '\033[90m\033[2m'      
+    STD_GREEN = '\033[32m'      
     BRIGHT_GREEN = '\033[92m\033[1m'  
     RED = '\033[91m\033[1m'            
     WHITE = '\033[97m'              
@@ -347,10 +348,10 @@ def banner():
     BOLD = '\033[1m'
 
     # System Boot Sequence (Dim Green)
-    print(f"{DIM_GREEN}Initializing STower v1.0.0...{RESET}")
-    print(f"{DIM_GREEN}Loading kernel modules... OK{RESET}")
-    print(f"{DIM_GREEN}Establishing connection... OK{RESET}")
-    print(f"{DIM_GREEN}System ready.{RESET}\n")
+    print(f"{STD_GREEN}Initializing STower v1.0.0...{RESET}")
+    print(f"{STD_GREEN}Loading kernel modules... OK{RESET}")
+    print(f"{STD_GREEN}Establishing connection... OK{RESET}")
+    print(f"{STD_GREEN}System ready.{RESET}\n")
 
     # Main Title (Bright Green)
     print(f"{BRIGHT_GREEN}╔════════════════════════════════════════════════════════════════╗{RESET}")
@@ -362,8 +363,8 @@ def banner():
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print(f"{WHITE}[SYSTEM] Initializing core modules... {BRIGHT_GREEN}OK{RESET}")
     print(f"{WHITE}[SYSTEM] Loading port database... {BRIGHT_GREEN}OK{RESET}")
-    print(f"{WHITE}[SYSTEM] Thread pool initialized: {DIM_GREEN}Dynamic{RESET}")
-    print(f"{WHITE}[INFO]  Timestamp: {DIM_GREEN}{timestamp}{RESET}")
+    print(f"{WHITE}[SYSTEM] Thread pool initialized: {STD_GREEN}Dynamic{RESET}")
+    print(f"{WHITE}[INFO]  Timestamp: {STD_GREEN}{timestamp}{RESET}")
     print()
 
     # Warning Block (Red for urgency)
@@ -373,9 +374,9 @@ def banner():
     print()
 
     # Separator (Dim Green)
-    print(f"{DIM_GREEN}─" * 60 + "{RESET}")
+    print(f"{STD_GREEN}─" * 60 + "{RESET}")
     print(f"{WHITE}Ready for target input. Type 'help' for commands.{RESET}")
-    print(f"{DIM_GREEN}─" * 60 + "{RESET}\n")
+    print(f"{STD_GREEN}─" * 60 + "{RESET}\n")
 
 
 
