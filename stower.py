@@ -124,7 +124,7 @@ class STower:
         
         return False
         
-        def scan_port(self, port, delay=0.0):
+    def scan_port(self, port, delay=0.0):
         """Scan a single port with enhanced logging and version detection."""
         DIM_GREEN = '\033[90m\033[2m'      # Dim, faint green for system logs
         BRIGHT_GREEN = '\033[92m\033[1m'   # Bright, bold green for success/open
