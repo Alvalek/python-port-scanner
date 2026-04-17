@@ -308,15 +308,15 @@ class STower:
             # Clear screen for a fresh look (optional, works on most terminals)
             # os.system('cls' if os.name == 'nt' else 'clear')  
 
-            print(f"\n{WHITE}============================================================{RESET}")
-            print(f"{BOLD}{WHITE}   STOWER v1.0.0  //  SIGNAL TOWER RECONNAISSANCE ENGINE{RESET}")
-            print(f"{WHITE}============================================================{RESET}")
-            print(f"{CYAN}[1]{RESET} Quick Scan (Ports 1-1024)")
-            print(f"{CYAN}[2]{RESET} Full Scan (Ports 1-65535)")
-            print(f"{CYAN}[3]{RESET} Custom Port Range")
-            print(f"{CYAN}[4]{RESET} Toggle Stealth Mode (Current: {BRIGHT_GREEN}OFF{RESET})")
-            print(f"{CYAN}[5]{RESET} Exit")
-            print(f"{WHITE}------------------------------------------------------------{RESET}")
+            print(f"\n{STD_GREEN}============================================================{RESET}")
+            print(f"{BOLD}{STD_GREEN}   STOWER v1.0.0  //  SIGNAL TOWER RECONNAISSANCE ENGINE{RESET}")
+            print(f"{STD_GREEN}============================================================{RESET}")
+            print(f"{CYAN}[1]{RESET} {STD_GREEN}Quick Scan (Ports 1-1024){RESET}")
+            print(f"{CYAN}[2]{RESET} {STD_GREEN}Full Scan (Ports 1-65535){RESET}")
+            print(f"{CYAN}[3]{RESET} {STD_GREEN}Custom Port Range{RESET}")
+            print(f"{CYAN}[4]{RESET} {STD_GREEN}Toggle Stealth Mode (Current: {RED}OFF{RESET}){RESET}")
+            print(f"{CYAN}[5]{RESET} {STD_GREEN}Exit{RESET}")
+            print(f"{STD_GREEN}------------------------------------------------------------{RESET}")
             
             choice = input(f"{BRIGHT_GREEN}Enter choice [{CYAN}1-5{RESET}]: {RESET}").strip()
 
@@ -356,11 +356,11 @@ class STower:
                         continue
 
                 # Ask for Stealth
-                stealth = input(f"{WHITE}Enable Stealth Mode? (y/n): {RESET}").strip().lower() == 'y'
+                stealth = input(f"{STD_GREEN}Enable Stealth Mode? (y/n): {RESET}").strip().lower() == 'y'
                 delay = 0.5 if stealth else 0.0
 
                 # Ask for Discovery
-                discover = input(f"{WHITE}Perform Host Discovery first? (y/n): {RESET}").strip().lower() == 'y'
+                discover = input(f"{STD_GREEN}Perform Host Discovery first? (y/n): {RESET}").strip().lower() == 'y'
 
                 print(f"\n{BRIGHT_GREEN}Starting scan on {target}...{RESET}\n")
                 
@@ -369,7 +369,7 @@ class STower:
                 scanner.scan(num_threads=50, discover_first=discover, stealth=stealth, delay=delay)
                 
                 # Ask to continue
-                cont = input(f"\n{WHITE}Press Enter to return to menu...{RESET}")
+                cont = input(f"\n{STD_GREEN}Press Enter to return to menu...{RESET}")
 
             else:
                 print(f"{RED}[!] Invalid choice. Please select 1-5.{RESET}")
