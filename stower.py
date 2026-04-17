@@ -446,43 +446,44 @@ def grab_banner(self, port):
         return None
 
 def banner():
-    """Display the STower Retro Terminal Dashboard."""
-    STD_GREEN = '\033[32m'      
-    BRIGHT_GREEN = '\033[92m\033[1m'  
-    RED = '\033[91m\033[1m'            
-    WHITE = '\033[97m'              
+    """Display the STower Retro Terminal Dashboard with new Logo."""
+    STD_GREEN = '\033[32m'
+    BRIGHT_GREEN = '\033[92m\033[1m'
+    RED = '\033[91m\033[1m'
+    WHITE = '\033[97m'
     RESET = '\033[0m'
     BOLD = '\033[1m'
 
-    # System Boot Sequence (Dim Green)
+    # The New Logo
+    logo = f"""
+{BRIGHT_GREEN}  ░▒▓███████▓▒░▒▓████████▓▒░▒▓██████▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓████████▓▒░▒▓███████▓▒░  
+░▒▓█▓▒░         ░▒▓█▓▒░  ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░ 
+░▒▓█▓▒░         ░▒▓█▓▒░  ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░ 
+ ░▒▓██████▓▒░   ░▒▓█▓▒░  ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓██████▓▒░ ░▒▓███████▓▒░  
+       ░▒▓█▓▒░  ░▒▓█▓▒░  ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░ 
+       ░▒▓█▓▒░  ░▒▓█▓▒░  ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░ 
+░▒▓███████▓▒░   ░▒▓█▓▒░   ░▒▓██████▓▒░ ░▒▓█████████████▓▒░░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░ 
+                                                                                      
+                                                                                      {RESET}
+"""
+    
+    print(logo)
+    
+    # System Boot Sequence
     print(f"{STD_GREEN}Initializing STower v1.0.0...{RESET}")
     print(f"{STD_GREEN}Loading kernel modules... OK{RESET}")
     print(f"{STD_GREEN}Establishing connection... OK{RESET}")
     print(f"{STD_GREEN}System ready.{RESET}\n")
 
-    # Main Title (Bright Green)
-    print(f"{BRIGHT_GREEN}╔════════════════════════════════════════════════════════════════╗{RESET}")
-    print(f"{BRIGHT_GREEN}║  STOWER v1.0.0  //  SIGNAL TOWER RECONNAISSANCE ENGINE       ║{RESET}")
-    print(f"{BRIGHT_GREEN}╚════════════════════════════════════════════════════════════════╝{RESET}")
-    print()
-
-    # System Status (White labels, Green/Dim values)
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"{WHITE}[SYSTEM] Initializing core modules... {BRIGHT_GREEN}OK{RESET}")
-    print(f"{WHITE}[SYSTEM] Loading port database... {BRIGHT_GREEN}OK{RESET}")
-    print(f"{WHITE}[SYSTEM] Thread pool initialized: {STD_GREEN}Dynamic{RESET}")
-    print(f"{WHITE}[INFO]  Timestamp: {STD_GREEN}{timestamp}{RESET}")
-    print()
-
-    # Warning Block (Red for urgency)
+    # Warning Block
     print(f"{RED}[!] LEGAL NOTICE: {RESET}")
-    print(f"{WHITE}   This tool is meant for authorized security testing. {RESET}")
-    print(f"{WHITE}   Unauthorized scanning may be considered a violation of federal law.{RESET}")
+    print(f"{STD_GREEN}   This tool is meant for authorized security testing. {RESET}")
+    print(f"{STD_GREEN}   Unauthorized scanning may be considered a violation of federal law.{RESET}")
     print()
 
-    # Separator (Dim Green)
+    # Separator
     print(f"{STD_GREEN}─" * 60 + "{RESET}")
-    print(f"{WHITE}Ready for target input. Type 'help' for commands.{RESET}")
+    print(f"{STD_GREEN}Ready for target input. Type 'help' for commands.{RESET}")
     print(f"{STD_GREEN}─" * 60 + "{RESET}\n")
 
 
