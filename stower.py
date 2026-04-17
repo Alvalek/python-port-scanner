@@ -294,6 +294,86 @@ class STower:
         
         print(f"{STD_GREEN}============================================================{RESET}\n")
 
+    def run_menu(self):
+        """Interactive menu for non-technical users."""
+        STD_GREEN = '\033[32m'
+        BRIGHT_GREEN = '\033[92m\033[1m'
+        RED = '\033[91m\033[1m'
+        WHITE = '\033[97m'
+        CYAN = '\033[96m'
+        RESET = '\033[0m'
+        BOLD = '\033[1m'
+
+        while True:
+            # Clear screen for a fresh look (optional, works on most terminals)
+            # os.system('cls' if os.name == 'nt' else 'clear')  
+
+            print(f"\n{WHITE}============================================================{RESET}")
+            print(f"{BOLD}{WHITE}   STOWER v1.0.0  //  SIGNAL TOWER RECONNAISSANCE ENGINE{RESET}")
+            print(f"{WHITE}============================================================{RESET}")
+            print(f"{CYAN}[1]{RESET} Quick Scan (Ports 1-1024)")
+            print(f"{CYAN}[2]{RESET} Full Scan (Ports 1-65535)")
+            print(f"{CYAN}[3]{RESET} Custom Port Range")
+            print(f"{CYAN}[4]{RESET} Toggle Stealth Mode (Current: {BRIGHT_GREEN}OFF{RESET})")
+            print(f"{CYAN}[5]{RESET} Exit")
+            print(f"{WHITE}------------------------------------------------------------{RESET}")
+            
+            choice = input(f"{BRIGHT_GREEN}Enter choice [{CYAN}1-5{RESET}]: {RESET}").strip()
+
+            if choice == '5':
+                print(f"\n{RED}[!] Shutting down STower. Stay safe!{RESET}\n")
+                break
+            
+            elif choice == '4':
+                # Toggle stealth mode logic (simple toggle for now)
+                # In a real app, you'd store this as an instance variable
+                print(f"{STD_GREEN}[+] Stealth mode toggled. (Note: This is a demo toggle){RESET}")
+                # For this demo, we'll just ask the user to confirm settings in the next step
+                continue
+
+            elif choice in ['1', '2', '3']:
+                # Get Target
+                target = input(f"{WHITE}Enter target IP or Hostname: {RESET}").strip()
+                if not target:
+                    print(f"{RED}[!] Target cannot be empty.{RESET}")
+                    continue
+
+                # Determine Port Range
+                if choice == '1':
+                    start, end = 1, 1024
+                elif choice == '2':
+                    start, end = 1, 65535
+                else: # Choice 3
+                    port_input = input(f"{WHITE}Enter port range (e.g., 1-1000 or 80,443): {RESET}").strip()
+                    try:
+                        if '-' in port_input:
+                            start, end = map(int, port_input.split('-'))
+                        else:
+                            # Single port or comma separated (simplified to single for now)
+                            start = end = int(port_input)
+                    except ValueError:
+                        print(f"{RED}[!] Invalid port range format.{RESET}")
+                        continue
+
+                # Ask for Stealth
+                stealth = input(f"{WHITE}Enable Stealth Mode? (y/n): {RESET}").strip().lower() == 'y'
+                delay = 0.5 if stealth else 0.0
+
+                # Ask for Discovery
+                discover = input(f"{WHITE}Perform Host Discovery first? (y/n): {RESET}").strip().lower() == 'y'
+
+                print(f"\n{BRIGHT_GREEN}Starting scan on {target}...{RESET}\n")
+                
+                # Create a temporary scanner instance for this run
+                scanner = STower(target, start, end)
+                scanner.scan(num_threads=50, discover_first=discover, stealth=stealth, delay=delay)
+                
+                # Ask to continue
+                cont = input(f"\n{WHITE}Press Enter to return to menu...{RESET}")
+
+            else:
+                print(f"{RED}[!] Invalid choice. Please select 1-5.{RESET}")
+
     def export_results(self, filename, format_type="json"):
         """NEW: Export results to JSON or CSV."""
         try:
@@ -384,42 +464,46 @@ def banner():
 def main():
     banner()
     
-    parser = argparse.ArgumentParser(prog="STower", description="STower: High-performance network reconnaissance.")
-    parser.add_argument("-t", "--target", required=True, help="Target IP or Hostname")
-    parser.add_argument("-p", "--ports", default="1-1024", help="Port range (e.g., 1-1024)")
-    parser.add_argument("-T", "--threads", type=int, default=50, help="Thread count")
-    parser.add_argument("-o", "--output", help="Output file (e.g., results.json)")
-    parser.add_argument("-f", "--format", choices=["json", "csv"], default="json", help="Output format")
-    parser.add_argument("--discover", action="store_true", 
-                       help="Check if host is alive (ping) before scanning ports")
-    parser.add_argument("--stealth", action="store_true", 
-                       help="Enable stealth mode with random delays to avoid IDS detection")
-    parser.add_argument("--delay", type=float, default=0.0, 
-                       help="Delay in seconds between port scans (default: 0 for aggressive)")
-    
-    args = parser.parse_args()
-    
-    try:
-        if "-" in args.ports:
-            start, end = map(int, args.ports.split("-"))
-        else:
-            start = end = int(args.ports)
-    except ValueError:
-        print("✖ Invalid port range."); sys.exit(1)
+    # Check if arguments were provided
+    if len(sys.argv) > 1:
+        # --- COMMAND LINE MODE ---
+        parser = argparse.ArgumentParser(prog="STower", description="STower: High-performance network reconnaissance.")
         
-    if start < 1 or end > 65535:
-        print("✖ Ports must be 1-65535"); sys.exit(1)
+        parser.add_argument("-t", "--target", required=True, help="Target IP or Hostname")
+        parser.add_argument("-p", "--ports", default="1-1024", help="Port range (e.g., 1-1024)")
+        parser.add_argument("-T", "--threads", type=int, default=50, help="Thread count")
+        parser.add_argument("--discover", action="store_true", help="Check if host is alive first")
+        parser.add_argument("--stealth", action="store_true", help="Enable stealth mode")
+        parser.add_argument("--delay", type=float, default=0.0, help="Delay in seconds between scans")
         
-    scanner = STower(args.target, start, end)
-    scanner.scan(
-        num_threads=args.threads, 
-        discover_first=args.discover,
-        stealth=args.stealth,
-        delay=args.delay
-    )
-    
-    if args.output:
-        scanner.export_results(args.output, args.format)
+        args = parser.parse_args()
+        
+        # Parse ports
+        try:
+            if "-" in args.ports:
+                start, end = map(int, args.ports.split("-"))
+            else:
+                start = end = int(args.ports)
+        except ValueError:
+            print("✖ Invalid port range format."); sys.exit(1)
+            
+        if start < 1 or end > 65535:
+            print("✖ Ports must be 1-65535"); sys.exit(1)
+            
+        scanner = STower(args.target, start, end)
+        scanner.scan(
+            num_threads=args.threads, 
+            discover_first=args.discover,
+            stealth=args.stealth,
+            delay=args.delay
+        )
+        
+    else:
+        # --- INTERACTIVE MENU MODE ---
+        # Create a dummy scanner just to access the menu method
+        # (We don't actually scan anything here, just show the menu)
+        dummy_scanner = STower("127.0.0.1", 1, 1024)
+        dummy_scanner.run_menu()
 
 if __name__ == "__main__":
     main()
