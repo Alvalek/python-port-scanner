@@ -326,8 +326,8 @@ class STower:
             print(f"{CYAN}[1]{RESET} {STD_GREEN}Quick Scan (Ports 1-1024){RESET}")
             print(f"{CYAN}[2]{RESET} {STD_GREEN}Full Scan (Ports 1-65535){RESET}")
             print(f"{CYAN}[3]{RESET} {STD_GREEN}Custom Port Range{RESET}")
-            print(f"{CYAN}[4]{RESET} {STD_GREEN}Toggle Stealth Mode (Current: {stealth_status}){RESET}")
-            print(f"{CYAN}[5]{RESET} {STD_GREEN}Toggle Host Discovery (Current: {discover_status}){RESET}")
+            print(f"{CYAN}[4]{RESET} {STD_GREEN}Toggle Stealth Mode (Current: {stealth_status}{STD_GREEN}){RESET}")
+            print(f"{CYAN}[5]{RESET} {STD_GREEN}Toggle Host Discovery (Current: {discover_status}{STD_GREEN}){RESET}")
             print(f"{CYAN}[6]{RESET} {STD_GREEN}Exit{RESET}")
             print(f"{WHITE}------------------------------------------------------------{RESET}")
             
