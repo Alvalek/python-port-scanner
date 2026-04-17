@@ -18,9 +18,7 @@ This tool scans target IP addresses to identify open ports using TCP socket conn
 
 ##  Live Demo
 
-Here is a glimpse of the **Terminal Dashboard** interface:
-
-<img width="1673" height="578" alt="Screenshot_20260412_031852" src="https://github.com/user-attachments/assets/7bcb8b71-c866-453f-bc05-829a72279ad9" />
+<img width="774" height="686" alt="Screenshot_20260416_235853" src="https://github.com/user-attachments/assets/aeae6247-1efc-4602-8e67-48f541db34e1" />
 
 ##  Features
 
@@ -62,6 +60,11 @@ pip install -r requirements.txt
 
 
 ## Usage
+**Interactive Mode (Recommended for Beginners)** <br>
+Run the tool without arguments to launch the menu:
+```bash
+python stower.py
+```
 **Basic Scan**<br>
 Scan the default range (1–1024) on a target:
 ```bash
